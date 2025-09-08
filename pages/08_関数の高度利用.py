@@ -27,8 +27,8 @@ def run1():
         st.write("麺をゆでました。お疲れ様でございました！")
     f = boil
     f()
-    st.code(str(f))
-    st.write(type(f))
+    st.write("関数オブジェクト名:", f.__name__)
+    st.write("型:", type(f).__name__)
     tools = [boil, boil, boil]
     tools[0]()
 

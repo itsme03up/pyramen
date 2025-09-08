@@ -33,8 +33,8 @@ def run1():
         st.write(1)
     f = func
     f()
-    st.code(str(f))
-    st.write(type(f))
+    st.write("関数オブジェクト名:", f.__name__)
+    st.write("型:", type(f).__name__)
     tools = [func, func, func]
     tools[0]()
 
@@ -219,6 +219,100 @@ st.markdown("""
 - 読みやすさ次第では **内包表記**の方が良い場面も多いです。
 """)
 
+# ──────────────────────────────────────────────────────────
+# #5 sorted(key=lambda ...)：メニューを価格で並べ替え
+# ──────────────────────────────────────────────────────────
+code5 = '''menu = [
+    {"name": "醤油", "price": 800},
+    {"name": "味噌", "price": 900},
+    {"name": "塩",   "price": 850},
+    {"name": "豚骨", "price": 1000},
+]
+
+# 価格の安い順（昇順）
+by_price_asc  = sorted(menu, key=lambda item: item["price"])
+
+# 価格の高い順（降順）
+by_price_desc = sorted(menu, key=lambda item: item["price"], reverse=True)
+
+# 複合キー：価格→名前（同額のときに名前で安定整列）
+by_price_then_name = sorted(menu, key=lambda item: (item["price"], item["name"]))
+
+print(by_price_asc)
+print(by_price_desc)
+print(by_price_then_name)
+'''
+
+def run5():
+    menu = [
+        {"name": "醤油", "price": 800},
+        {"name": "味噌", "price": 900},
+        {"name": "塩",   "price": 850},
+        {"name": "豚骨", "price": 1000},
+    ]
+    by_price_asc  = sorted(menu, key=lambda item: item["price"])
+    by_price_desc = sorted(menu, key=lambda item: item["price"], reverse=True)
+    by_price_then_name = sorted(menu, key=lambda item: (item["price"], item["name"]))
+    st.write("安い順:", by_price_asc)
+    st.write("高い順:", by_price_desc)
+    st.write("価格→名前:", by_price_then_name)
+
+code_showcase("#5 sorted(key=…)：価格でソート／複合キー", code5, runner=run5)
+
+st.markdown("""
+**要点**  
+- `key=` には“並べ替え用の値”を返す関数を渡します（ここでは `lambda item: item["price"]`）。  
+- 降順は `reverse=True`。  
+- 複合ソートは `key=lambda x: (x["price"], x["name"])` のようにタプルを返す。  
+- `sorted` は元リストを変更しません（安定ソート）。
+""")
+
+# ──────────────────────────────────────────────────────────
+# #6 any / all：在庫チェックを簡潔に
+# ──────────────────────────────────────────────────────────
+code6 = '''stock = {"noodle": 5, "base_shoyu": 2, "egg": 0, "nori": 10}
+
+def can_make(order_items):
+    # すべての必要素材が 1 以上あるか？
+    return all(stock.get(item, 0) >= 1 for item in order_items)
+
+def has_shortage(order_items):
+    # どれか1つでも 0 なら不足（any）
+    return any(stock.get(item, 0) <= 0 for item in order_items)
+
+ramen_shoyu = ["noodle", "base_shoyu", "nori"]
+ramen_egg   = ["noodle", "base_shoyu", "egg"]
+
+print(can_make(ramen_shoyu))      # True
+print(has_shortage(ramen_shoyu))  # False
+
+print(can_make(ramen_egg))        # False（eggが0）
+print(has_shortage(ramen_egg))    # True
+'''
+
+def run6():
+    stock = {"noodle": 5, "base_shoyu": 2, "egg": 0, "nori": 10}
+    def can_make(order_items):
+        return all(stock.get(item, 0) >= 1 for item in order_items)
+    def has_shortage(order_items):
+        return any(stock.get(item, 0) <= 0 for item in order_items)
+    ramen_shoyu = ["noodle", "base_shoyu", "nori"]
+    ramen_egg   = ["noodle", "base_shoyu", "egg"]
+    st.write("醤油ラーメン 作れる？", can_make(ramen_shoyu))
+    st.write("醤油ラーメン 不足ある？", has_shortage(ramen_shoyu))
+    st.write("味玉ラーメン 作れる？", can_make(ramen_egg))
+    st.write("味玉ラーメン 不足ある？", has_shortage(ramen_egg))
+
+code_showcase("#6 any / all：在庫チェック（ジェネレータ式）", code6, runner=run6)
+
+st.markdown("""
+**要点**  
+- `all(条件 for …)`：すべて満たすなら True（在庫OK）。  
+- `any(条件 for …)`：どれか一つでも True なら True（不足あり等）。  
+- `dict.get(key, 0)` で存在しない素材を 0 とみなすのが実務で安全。  
+- 並列に大量チェックするときは any() の短絡評価で無駄を抑えられます。
+""")
+
 st.divider()
 st.subheader("🧪 小テスト（MCQ）")
 
@@ -243,5 +337,20 @@ ok3 = mcq(
     explain="短い無名関数としての“即席道具”が本領です。",
     key="lambda_q3",
 )
-st.success(f"スコア：{int(ok1)+int(ok2)+int(ok3)}/3 でした。良かったですね！")
+ok4 = mcq(
+    "sorted(key=…) の key に渡すべきものは？",
+    ["比較対象のインデックス", "要素を受けて“並べ替え用の値”を返す関数", "boolを返す述語関数のみ"],
+    answer_index=1,
+    explain="key= は『各要素→並べ替えキー』の関数。述語は filter で使います。",
+    key="lambda_q4",
+)
+ok5 = mcq(
+    "在庫チェックで『どれか一つでも不足があれば警告』に最適なのは？",
+    ["all(stock[item] <= 0 for item in items)", "any(stock.get(item,0) <= 0 for item in items)", "sum(stock.values()) == 0"],
+    answer_index=1,
+    explain="不足判定は any(不足条件) が簡潔で短絡的（高速）。getで未登録も0扱いに。",
+    key="lambda_q5",
+)
 
+current = int(ok1) + int(ok2) + int(ok3) + int(ok4) + int(ok5)
+st.success(f"スコア：{current}/5 でした。良かったですね！")
