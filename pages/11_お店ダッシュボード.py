@@ -62,7 +62,7 @@ with col_a:
             sim['cash'] += PRICES[menu]
             sim['served'] += 1
             sim['sales_over_time'].append(sim['served'])
-            st.success(f"{menu}を提供しました。良かったですね！")
+            st.success(f"{menu}を提供しました。お疲れ様でございました！")
         else:
             sim['complaints'] += 1
             sim['sales_over_time'].append(sim['served'])
@@ -99,7 +99,7 @@ with st.form("restock_form"):
         sim['inventory']['base_shoyu'] += int(add_shoyu)
         sim['inventory']['base_miso'] += int(add_miso)
         sim['inventory']['base_shio'] += int(add_shio)
-        st.success(f"仕入れ完了（コスト: -¥{cost}）。良かったですね！")
+        st.success(f"仕入れ完了（コスト: -¥{cost}）。お疲れ様でございました！")
 
 st.caption("注: コストは麺=¥100/玉、各ベース=¥150/杯ぶんでございました。")
 
@@ -114,6 +114,6 @@ st.divider()
 
 if st.button("全リセット（このページの状態）"):
     st.session_state.pop('sim', None)
-    st.success("初期化しました。良かったですね！")
+    st.success("初期化しました。お疲れ様でございました！")
     st.experimental_rerun()
 

@@ -34,7 +34,7 @@ def mcq(question: str, choices: List[str], answer_index: int, explain: str = "",
                 qs['graded'][qkey] = {'correct': ok}
             # 表示（既採点でも再表示だけ行う）
             if ok:
-                st.success("✅ 正解でした。良かったですね！")
+                st.success("✅ 正解でした。お疲れ様でございました！")
             else:
                 st.error(f"❌ 惜しかったです。正解は「{choices[answer_index]}」でした。")
             if already:

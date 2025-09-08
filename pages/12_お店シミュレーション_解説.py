@@ -10,5 +10,5 @@ pick = st.selectbox("問題を選択", qs, index=0)
 st.markdown(EXPLAINS[pick])
 
 st.divider()
-st.info("ドリル本編はサイドバーの『10_お店シミュレーション_穴埋め』から実施できます。良かったですね！")
+st.info("ドリル本編はサイドバーの『10_お店シミュレーション_穴埋め』から実施できます。お疲れ様でございました！")
 

@@ -14,7 +14,7 @@
 ## Constraints
 - Python 3.10+, Streamlit 1.36+
 - 既存の lib/ui.py（section_title, code_showcase）と lib/quiz.py（mcq）を再利用
-- 川田語の正誤メッセージ：「良かったですね！」/「惜しかったです」
+- 川田語の正誤メッセージ：「お疲れ様でございました！」/「惜しかったです」
 - サンプルコードは最小限で実行可能、コメントは日本語
 
 ## Acceptance Criteria
